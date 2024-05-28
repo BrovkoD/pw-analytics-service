@@ -7,9 +7,16 @@ from dao.ragweed_dao import count_ragweed_amount_per_district, count_ragweed_siz
 from dto.district_border_dto import DistrictBorderDTO
 
 
-def get_spread_statistics():
+def get_spread_statistics(all_locations: bool):
     define_districts()
-    px.bar(count_ragweed_amount_per_district(), x="district", y="amount", text="amount").show()
+
+    data = count_ragweed_amount_per_district()
+    if not all_locations:
+        data = data[data["district"] != "Not in Kyiv"]
+
+    px.bar(data, x="district", y="amount", text="amount", color="amount",
+           color_continuous_scale=px.colors.sequential.Oranges).show()
+
     resp = flask.Response(count_ragweed_amount_per_district().to_json())
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp

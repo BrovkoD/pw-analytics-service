@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 
 from service import ragweed_service
 
@@ -7,7 +7,7 @@ ragweed_blueprint = Blueprint("ragweed_blueprint", __name__, url_prefix="/ragwee
 
 @ragweed_blueprint.route("/statistics/spread")
 def get_spread_statistics():
-    return ragweed_service.get_spread_statistics()
+    return ragweed_service.get_spread_statistics(request.args.get("allLocations", False, bool))
 
 
 @ragweed_blueprint.route("/statistics/size")
