@@ -2,13 +2,9 @@ import flask
 import matplotlib.path as mplt_path
 import pandas as pd
 import plotly.express as px
-from urllib.request import urlopen
 import json
 
-# with urlopen(
-#         'https://raw.githubusercontent.com/EugeneBorshch/ukraine_geojson/master/UA_59_Sumska.geojson') as response:
-#     counties = json.load(response)
-with open("resources/test.geojson", 'r') as file:
+with open("resources/kyiv_districts.geojson", 'r') as file:
     counties = json.load(file)
 
 from dao import district_dao, ragweed_dao
