@@ -6,6 +6,20 @@ from database.mysql_db import get_mysql_connection
 con = get_mysql_connection()
 
 
+def find_all():
+    cursor = con.cursor()
+    cursor.execute("select rj.id, rj.latitude, rj.longitude, rs.size"
+                   " from ragweed_journal rj"
+                   " join ragweed_size rs on rj.size_id = rs.id")
+
+    result = []
+    for data in cursor.fetchall():
+        result.append([data[0], data[1], data[2], data[3]])
+
+    return pd.DataFrame(result, columns=["id", "latitude", "longitude", "size"])
+
+
+
 def find_where_district_is_null():
     cursor = con.cursor()
     cursor.execute("select * from ragweed_journal where district_id is null")
@@ -19,7 +33,7 @@ def find_where_district_is_null():
 
 def count_ragweed_amount_per_district():
     cursor = con.cursor()
-    cursor.execute("select d.name, count(r.id)"
+    cursor.execute("select d.id, d.name, count(r.id)"
                    " from ragweed_journal r"
                    " join district_journal d"
                    " where r.district_id is not null"
@@ -29,9 +43,9 @@ def count_ragweed_amount_per_district():
 
     result = []
     for data in cursor.fetchall():
-        result.append([data[0], data[1]])
+        result.append([data[0], data[1], data[2]])
 
-    return pd.DataFrame(result, columns=["district", "amount"])
+    return pd.DataFrame(result, columns=["id", "territory", "amount"])
 
 
 def count_ragweed_size_per_district():
